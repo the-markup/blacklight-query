@@ -1,0 +1,54 @@
+{
+    "name": "@themarkup/blacklight-query",
+    "version": "1.0.0",
+    "description": "A simple query ",
+    "main": "build/index.js",
+    "funding": {
+        "type": "individual",
+        "url": "https://themarkup.org/donate"
+    },
+    "scripts": {
+        "main": "ts-node main.ts",
+        "test": "jest",
+        "clean": "rimraf outputs -i",
+        "prettier": "prettier \"*.ts\" --write"
+    },
+    "author": "Miles Hilton",
+    "dependencies": {
+        "@themarkup/blacklight-collector": "^3.2.1",
+        "ts-progress": "^0.1.9"
+    },
+    "devDependencies": {
+        "@types/jest": "^27.5.1",
+        "@types/node": "^20.16.1",
+        "@types/tough-cookie": "^4.0.5",
+        "@typescript-eslint/eslint-plugin": "^5.59.9",
+        "@typescript-eslint/parser": "^5.59.9",
+        "eslint": "^8.42.0",
+        "eslint-config-prettier": "^8.8.0",
+        "express": "^4.17.1",
+        "jest": "^28.1.0",
+        "prettier": "^2.8.8",
+        "ts-jest": "^28.0.2",
+        "ts-node": "^8.5.4",
+        "typescript": "^4.9.5"
+    },
+    "jest": {
+        "testPathIgnorePatterns": [
+            "shared",
+            "stack.js"
+        ],
+        "preset": "ts-jest",
+        "globals": {
+            "__DEV_SERVER__": "http://localhost:8125",
+            "ts-jest": {
+                "diagnostics": false
+            }
+        },
+        "globalSetup": "./config/test-server-setup.js",
+        "globalTeardown": "./config/test-server-teardown.js"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
