@@ -27,7 +27,7 @@ https://www.calmaterrs.org
 
 ### Collector Options
 
-All of the [`blacklight-collector`](https://github.com/the-markup/blacklight-collector?tab=readme-ov-file#collector-configuration) options can be specified using this tool.
+All of the [`blacklight-collector`](https://github.com/the-markup/blacklight-collector?tab=readme-ov-file#collector-configuration) options can be specified using this tool, by editing the `config` object in `main.ts`.
 
 Out-of-the-box, this tool sets the following options:
 
