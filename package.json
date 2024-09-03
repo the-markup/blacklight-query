@@ -8,7 +8,7 @@
         "url": "https://themarkup.org/donate"
     },
     "scripts": {
-        "main": "ts-node main.ts",
+        "main": "ts-node src/main.ts",
         "test": "jest",
         "clean": "rimraf outputs -i",
         "prettier": "prettier \"*.ts\" --write"
