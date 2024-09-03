@@ -44,9 +44,7 @@
             "ts-jest": {
                 "diagnostics": false
             }
-        },
-        "globalSetup": "./config/test-server-setup.js",
-        "globalTeardown": "./config/test-server-teardown.js"
+        }
     },
     "publishConfig": {
         "access": "public"
