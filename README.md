@@ -45,3 +45,7 @@ Read the blacklight-collector README for a full list of options and their defaul
 ## Outputs
 
 All scans will be saved in the `outputs` folder, in sub-folders named for the hostname of the url being scanned.
+
+## Testing
+
+`npm run test`
