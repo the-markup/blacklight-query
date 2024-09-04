@@ -6,15 +6,16 @@ import { collect } from "@themarkup/blacklight-collector";
 import { reportFailures } from "./utils";
 
 // Gather URLs from input file
-if (!fs.existsSync("urls.txt")) {
+const urlsPath = join(__dirname, '../urls.txt');
+if (!fs.existsSync(urlsPath)) {
   console.log(
     "Please create a file named 'urls.txt', containing a newline-separated list of urls to scan."
   );
   exit();
 }
-const urls = fs.readFileSync("urls.txt", "utf8");
+const urls = fs.readFileSync(urlsPath, "utf8");
 const urlsList = urls.split("\n");
-const outDir = "outputs";
+const outDir = "../outputs";
 
 let progressBar = progress.create({ total: urlsList.length });
 
