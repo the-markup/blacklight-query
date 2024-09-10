@@ -1,6 +1,6 @@
 # Blacklight Query
 
-A command-line tool to fetch [Blacklight](https://themarkup.org/series/blacklight) scans for a list of urls.
+A command-line tool to fetch [Blacklight](https://themarkup.org/series/blacklight) scans for a list of urls. Directly queries the open-source [Blacklight Collector](https://github.com/the-markup/blacklight-collector) tool, and runs entirely locally.
 
 ## Prerequesites
 
