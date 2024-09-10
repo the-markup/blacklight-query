@@ -1,7 +1,7 @@
 {
     "name": "@themarkup/blacklight-query",
     "version": "1.0.0",
-    "description": "A simple query ",
+    "description": "A simple tool to generate Blacklight-Collector scans of a list of urls",
     "main": "build/index.js",
     "funding": {
         "type": "individual",
@@ -13,7 +13,16 @@
         "clean": "rimraf outputs -i",
         "prettier": "prettier \"*.ts\" --write"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/the-markup/blacklight-query.git"
+    },
     "author": "Miles Hilton",
+    "license": "https://github.com/the-markup/blacklight-query#licensing",
+    "bugs": {
+        "url": "https://github.com/the-markup/blacklight-query/issues"
+    },
+    "homepage": "https://github.com/the-markup/blacklight-query#readme",
     "dependencies": {
         "@themarkup/blacklight-collector": "^3.2.1",
         "ts-progress": "^0.1.9"
