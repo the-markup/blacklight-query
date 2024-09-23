@@ -14,7 +14,7 @@ if (!fs.existsSync(urlsPath)) {
   exit();
 }
 const urls = fs.readFileSync(urlsPath, "utf8");
-const urlsList = urls.split("\n");
+const urlsList = urls.trim().split(/\r?\n|\r|\n/g);
 const outDir = "../outputs";
 
 let progressBar = progress.create({ total: urlsList.length });
