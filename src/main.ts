@@ -31,7 +31,13 @@ if (!fs.existsSync(join(__dirname, outDir))) {
   for (let url of urlsList) {
     console.log(`Scanning ${url} ...`);
     const urlObj = new URL(url);
-    const folderStructure = `${outDir}/${urlObj.hostname}`;
+    let folderStructure = `${outDir}/${urlObj.hostname}`;
+
+    if (fs.existsSync(join(__dirname, folderStructure))) {
+      const timestamp = Date.now();
+      folderStructure += `-${timestamp}`;
+    }
+
     const config = {
       headless: true,
       outDir: join(__dirname, folderStructure),
