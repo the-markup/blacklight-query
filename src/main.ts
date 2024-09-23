@@ -22,8 +22,8 @@ let progressBar = progress.create({ total: urlsList.length });
 let failedUrls: string[] = [];
 
 // Make output directory
-if (!fs.existsSync(outDir)) {
-  fs.mkdirSync(outDir);
+if (!fs.existsSync(join(__dirname, outDir))) {
+  fs.mkdirSync(join(__dirname, outDir));
 }
 
 // Gather scans
