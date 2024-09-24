@@ -14,7 +14,7 @@ if (!fs.existsSync(urlsPath)) {
   exit();
 }
 const urls = fs.readFileSync(urlsPath, "utf8");
-const urlsList = urls.split("\n");
+const urlsList = urls.trim().split(/\r?\n|\r|\n/g);
 const outDir = "../outputs";
 
 let progressBar = progress.create({ total: urlsList.length });
@@ -22,8 +22,8 @@ let progressBar = progress.create({ total: urlsList.length });
 let failedUrls: string[] = [];
 
 // Make output directory
-if (!fs.existsSync(outDir)) {
-  fs.mkdirSync(outDir);
+if (!fs.existsSync(join(__dirname, outDir))) {
+  fs.mkdirSync(join(__dirname, outDir));
 }
 
 // Gather scans
@@ -31,7 +31,13 @@ if (!fs.existsSync(outDir)) {
   for (let url of urlsList) {
     console.log(`Scanning ${url} ...`);
     const urlObj = new URL(url);
-    const folderStructure = `${outDir}/${urlObj.hostname}`;
+    let folderStructure = `${outDir}/${urlObj.hostname}`;
+
+    if (fs.existsSync(join(__dirname, folderStructure))) {
+      const timestamp = Date.now();
+      folderStructure += `-${timestamp}`;
+    }
+
     const config = {
       headless: true,
       outDir: join(__dirname, folderStructure),
