@@ -11,8 +11,9 @@ A command-line tool to fetch [Blacklight](https://themarkup.org/series/blackligh
 
 - `nvm use`
 - `npm install`
-- Create `urls.txt` file, with newline-separated absolute URLs to scan
-- `npm run main`
+- `./blacklight-query urls.txt`
+- `echo "https://themarkup.org/ | ./blacklight-query`
+- `./blacklight-query < urls.txt`
 
 ## Inputs
 
