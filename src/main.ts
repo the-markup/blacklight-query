@@ -6,11 +6,9 @@ import { collect } from "@themarkup/blacklight-collector";
 import { reportFailures } from "./utils";
 
 // Gather URLs from input file
-const urlsPath = join(__dirname, '../urls.txt');
+const urlsPath = join(__dirname, '../', process.argv[2]);
 if (!fs.existsSync(urlsPath)) {
-  console.log(
-    "Please create a file named 'urls.txt', containing a newline-separated list of urls to scan."
-  );
+  console.log(`Could not find ${urlsPath}.`);
   exit();
 }
 const urls = fs.readFileSync(urlsPath, "utf8");

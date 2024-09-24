@@ -2,7 +2,8 @@
     "name": "@themarkup/blacklight-query",
     "version": "1.0.0",
     "description": "A simple tool to generate Blacklight-Collector scans of a list of urls",
-    "main": "build/index.js",
+    "main": "src/main.ts",
+    "bin": "./blacklight-query",
     "funding": {
         "type": "individual",
         "url": "https://themarkup.org/donate"
