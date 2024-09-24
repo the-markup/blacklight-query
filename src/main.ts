@@ -6,10 +6,17 @@ import { collect } from "@themarkup/blacklight-collector";
 import { reportFailures } from "./utils";
 
 // Gather URLs from input file
-const urlsPath = join(__dirname, '../', process.argv[2]);
+const urlsFile = process.argv[2];
+let urlsPath;
+if (urlsFile[0] == '/' || urlsFile[0] == '~') {
+  urlsPath = urlsFile;
+} else {
+  urlsPath = join(process.cwd(), urlsFile);
+}
+
 if (!fs.existsSync(urlsPath)) {
   console.log(`Could not find ${urlsPath}.`);
-  exit();
+  exit(1);
 }
 const urls = fs.readFileSync(urlsPath, "utf8");
 const urlsList = urls.trim().split(/\r?\n|\r|\n/g);
