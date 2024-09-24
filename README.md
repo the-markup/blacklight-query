@@ -17,7 +17,7 @@ A command-line tool to fetch [Blacklight](https://themarkup.org/series/blackligh
 
 You can also pipe your list of URLs.
 
-- `echo "https://themarkup.org/ | ./blacklight-query`
+- `echo "https://themarkup.org/" | ./blacklight-query`
 - `./blacklight-query < urls.txt`
 
 ## Inputs
