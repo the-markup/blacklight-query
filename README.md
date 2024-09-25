@@ -11,12 +11,11 @@ A command-line tool to fetch [Blacklight](https://themarkup.org/series/blackligh
 
 - `nvm use`
 - `npm install`
-- Create `urls.txt` file, with newline-separated absolute URLs to scan
-- `npm run main`
+- `./blacklight-query urls.txt` where `urls.txt` has newline-separated absolute URLs to scan
 
 ## Inputs
 
-Write all URLs you wish to scan as **absolute URLs** (including protocol, domain, and path) in a file named `urls.txt` in the root directory. Separate urls by newline.
+Write all URLs you wish to scan as **absolute URLs** (including protocol, domain, and path). Separate each URL with a newline.
 
 ### Sample `urls.txt` file
 
@@ -24,6 +23,13 @@ Write all URLs you wish to scan as **absolute URLs** (including protocol, domain
 https://www.themarkup.org
 https://www.calmatters.org
 ```
+
+### You can use pipes
+
+You can also pipe your list of URLs.
+
+- `echo "https://themarkup.org/" | ./blacklight-query`
+- `./blacklight-query < urls.txt`
 
 ### Collector Options
 

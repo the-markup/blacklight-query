@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+if [ -t 0 ]; then
+    # URLs are passed as an argument value
+    if (( $# != 1 )) ; then
+        echo "Usage: blacklight-query urls.txt"
+        echo "       echo \"https://themarkup.org\" | blacklight-query"
+        echo "       blacklight-query < urls.txt"
+        echo
+        echo "Please provide a list of URLs, where each URL is on its own line."
+        exit 1
+    fi
+    "$dir/node_modules/.bin/ts-node" --project "$dir/tsconfig.json" "$dir/src/main.ts" $1
+else
+    # URLs are piped to stdin
+    time=$(date +%s)
+    while read -r line ; do
+        echo $line >> "$dir/.urls-$time.txt"
+    done
+    "$dir/node_modules/.bin/ts-node" --project "$dir/tsconfig.json" "$dir/src/main.ts" "$dir/.urls-$time.txt"
+    rm "$dir/.urls-$time.txt"
+fi
