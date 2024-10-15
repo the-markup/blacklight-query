@@ -2,7 +2,7 @@
 
 A command-line tool to fetch [Blacklight](https://themarkup.org/series/blacklight) scans for a list of urls. Directly queries the open-source [Blacklight Collector](https://github.com/the-markup/blacklight-collector) tool and runs entirely locally.
 
-## Prerequesites
+## Prerequisites
 
 - [`nvm`](https://www.linode.com/docs/guides/how-to-install-use-node-version-manager-nvm/)
 - [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
@@ -51,6 +51,10 @@ Read the [`blacklight-collector` README](https://github.com/the-markup/blackligh
 ## Outputs
 
 All scans will be saved in the `outputs` folder, in subdirectories named for the hostname of the url being scanned.
+
+## Notes
+
+Be aware that the Collector is fairly resource-heavy, and may slow down your computer. We recommend scanning smaller lists if hardware becomes overtaxed.
 
 ## Testing
 
