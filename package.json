@@ -10,6 +10,7 @@
     },
     "scripts": {
         "main": "ts-node src/main.ts",
+        "summarize": "ts-node --project tsconfig.json src/summarize.ts",
         "test": "jest",
         "clean": "rimraf outputs -i",
         "prettier": "prettier \"*.ts\" --write"

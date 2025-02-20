@@ -46,7 +46,7 @@ if (!fs.existsSync(join(__dirname, outDir))) {
     const config = {
       headless: true,
       outDir: join(__dirname, folderStructure),
-      numPages: 0,
+      numPages: 1,
     };
 
     try {
