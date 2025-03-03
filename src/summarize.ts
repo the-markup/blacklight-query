@@ -15,7 +15,7 @@ interface QuerySummary {
   fb_pixel_events_count: number;
   key_logging_events: string;
   session_recorder_events: string;
-  third_party_tracker_count: number;
+  third_party_trackers_count: number;
 }
 
 // get the current date & time as an ISO string
@@ -153,7 +153,7 @@ const processDirectory = async (directory: string) => {
             fb_pixel_events_count: inspection.reports.fb_pixel_events.length,
             key_logging_events: keyLoggingEvents(inspection.reports.key_logging),
             session_recorder_events: sessionRecorderEvents(inspection.reports.session_recorders),
-            third_party_tracker_count: inspection.reports.third_party_trackers.length,
+            third_party_trackers_count: inspection.reports.third_party_trackers.length,
           }
           summaries.push(summary);
 

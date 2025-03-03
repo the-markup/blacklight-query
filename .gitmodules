@@ -1,0 +1,3 @@
+[submodule "packages/blacklight-lambda"]
+	path = packages/blacklight-lambda
+	url = git@github.com:the-markup/blacklight-lambda.git
