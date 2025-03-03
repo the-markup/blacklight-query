@@ -186,6 +186,8 @@ const processDirectory = async (directory: string) => {
         } catch (err: any) {
           console.log("error processing inspection!", err);
         }
+      } else {
+        console.log(`** NO inspection.json found at ${inspectionPath}!`);
       }
     }
   }
