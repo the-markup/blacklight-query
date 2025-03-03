@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import ObjectsToCsv from "objects-to-csv";
+import { cardGroups } from '../packages/blacklight-lambda/src-cards-writer/index';
+import * as trackerRadarDomainCache from '../packages/blacklight-lambda/src-api-lambda/domain-cache';
+import * as reportedCardsData from '../packages/blacklight-lambda/src-api-lambda/reported-cards';
 
 interface QuerySummary {
   url: string;
@@ -183,6 +186,11 @@ const processDirectory = async (directory: string) => {
           console.log(`> ${inspection.reports.third_party_trackers.length} third party tracker events!`);
           console.log("------------------");
 
+          const cardsData: any[] = reportedCardsData.default;
+          const domainCache: any = trackerRadarDomainCache;
+          const { groups } = await cardGroups(inspection, inspectionPath, domainCache, cardsData);
+          console.log('groups is: ', JSON.stringify(groups));
+
         } catch (err: any) {
           console.log("error processing inspection!", err);
         }
@@ -192,6 +200,7 @@ const processDirectory = async (directory: string) => {
     }
   }
 
+
   // write to csv
   const summaryPath: string = `./${timestamp()}-summary.csv`;
   const csv = new ObjectsToCsv(summaries);
@@ -199,4 +208,4 @@ const processDirectory = async (directory: string) => {
   console.log(`> summary written to ${summaryPath}`);
 }
 
-processDirectory("./outputs");
+processDirectory("./testing");

@@ -1,5 +1,7 @@
-node_modules/
+*-summary.csv
+*.txt
 .DS_Store
 analysis/
+node_modules/
 outputs/
-*.txt
+testing/
