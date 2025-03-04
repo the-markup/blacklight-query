@@ -6,22 +6,6 @@ import reportedCardsData from "../packages/blacklight-lambda/src-api-lambda/repo
 import { cardGroups } from '../packages/blacklight-lambda/src-cards-writer/index';
 import { stripHtml } from "string-strip-html";
 
-interface QuerySummary {
-  url: string;
-  behavior_event_listeners: string;
-  canvas_fingerprint_data_url_count: number;
-  canvas_fingerprinters_count: number;
-  canvas_fingerprint_style_count: number;
-  canvas_fingerprint_text_count: number;
-  font_fingerprint_canvas_font_count: number;
-  font_fingerprint_text_measure_count: number;
-  cookies_count: number;
-  fb_pixel_events_count: number;
-  key_logging_events: string;
-  session_recorder_events: string;
-  third_party_trackers_count: number;
-}
-
 interface CardsSummary {
   url: string;
   ad_trackers_number: number;
@@ -150,7 +134,6 @@ const summarizeCanvasFingerprinters = (canvasPrints: any, fontPrints: any) => {
 // Read all JSON files and process each listing
 const processDirectory = async (directory: string) => {
   const files = fs.readdirSync(directory);
-  const querySummaries: QuerySummary[] = [];
   const cardsSummaries: CardsSummary[] = [];
 
   for (const entry of files) {
@@ -163,49 +146,6 @@ const processDirectory = async (directory: string) => {
       if (fs.existsSync(inspectionPath)) {
         try {
           const inspection = JSON.parse(fs.readFileSync(inspectionPath, "utf8"));
-
-          const querySummary: QuerySummary = {
-            url: inspection.uri_ins,
-            behavior_event_listeners: Object.keys(inspection.reports.behaviour_event_listeners).join(", "),
-            canvas_fingerprint_data_url_count: canvasFingerprintDataUrlCount(inspection.reports.canvas_fingerprinters),
-            canvas_fingerprinters_count: canvasFingerprintersCount(inspection.reports.canvas_fingerprinters),
-            canvas_fingerprint_style_count: canvasFingerprintStyleCount(inspection.reports.canvas_fingerprinters),
-            canvas_fingerprint_text_count: canvasFingerprintTextCount(inspection.reports.canvas_fingerprinters),
-            font_fingerprint_canvas_font_count: fontFingerprintCanvasFontCount(inspection.reports.canvas_font_fingerprinters),
-            font_fingerprint_text_measure_count: fontFingerprintTextMeasureCount(inspection.reports.canvas_font_fingerprinters),
-            cookies_count: inspection.reports.cookies.length,
-            fb_pixel_events_count: inspection.reports.fb_pixel_events.length,
-            key_logging_events: keyLoggingEvents(inspection.reports.key_logging),
-            session_recorder_events: sessionRecorderEvents(inspection.reports.session_recorders),
-            third_party_trackers_count: inspection.reports.third_party_trackers.length,
-          }
-          querySummaries.push(querySummary);
-
-          // summarize contents of inspection.json
-          console.log("------------------");
-          // the URL of the site
-          console.log(`> URL: ${inspection.uri_ins}`);
-          // behavior event listeners
-          if (Object.keys(inspection.reports.behaviour_event_listeners).length > 0) {
-            console.log(`> found behavior event listeners: ${Object.keys(inspection.reports.behaviour_event_listeners).join(", ")}`);
-          }
-          // canvas fingerprinters & font fingerprinters
-          summarizeCanvasFingerprinters(inspection.reports.canvas_fingerprinters, inspection.reports.canvas_font_fingerprinters);
-          // cookies
-          console.log(`> ${inspection.reports.cookies.length} cookies!`);
-          // meta pixel events
-          console.log(`> ${inspection.reports.fb_pixel_events.length} meta pixel events!`);
-          // key logging
-          if (Object.keys(inspection.reports.key_logging).length > 0) {
-            console.log(`> found key logging: ${Object.keys(inspection.reports.key_logging).join(", ")}`);
-          }
-          // session recorders
-          if (Object.keys(inspection.reports.session_recorders).length > 0) {
-            console.log(`> found session recorders: ${Object.keys(inspection.reports.session_recorders).join(", ")}`);
-          }
-          // third party trackers
-          console.log(`> ${inspection.reports.third_party_trackers.length} third party tracker events!`);
-          console.log("------------------");
 
           const cardsData: any[] = reportedCardsData;
           const domainCache: any = trackerRadarDomainCache;
@@ -228,7 +168,7 @@ const processDirectory = async (directory: string) => {
             ad_trackers_owners: adTrackersCard?.domainData?.owners?.join(", ") || "",
             ad_trackers_statement: stripHtml(adTrackersCard?.onAvgStatement || "").result,
             cookies_number: cookiesCard?.bigNumber || 0,
-            cookies_owners: cookiesCard?.domainData?.owners?.join(", ") || "None",
+            cookies_owners: cookiesCard?.domainData?.owners?.join(", ") || "",
             cookies_statement: stripHtml(cookiesCard?.onAvgStatement || "").result,
             canvas_fingerprinting_found: fingerprintingCard?.testEventsFound ? "true" : "false",
             canvas_fingerprinting_owners: fingerprintingCard?.domainData?.owners?.join(", ") || "",
@@ -242,6 +182,70 @@ const processDirectory = async (directory: string) => {
           }
           cardsSummaries.push(cardsSummary);
 
+          // summarize findings to the console
+          let cardContent = "-----------------------------------------------";
+          // the URL of the site
+          cardContent = `${cardContent}\n${inspection.uri_ins}\n`;
+          // ad trackers
+          let adTrackersPrefix = "[ ] ";
+          if (cardsSummary.ad_trackers_number > 0) {
+            adTrackersPrefix = `[X] ${cardsSummary.ad_trackers_number} `;
+          }
+          cardContent = `${cardContent}\n${adTrackersPrefix}${adTrackersCard.title} - ${cardsSummary.ad_trackers_statement}`;
+          if (cardsSummary.ad_trackers_owners !== "") {
+            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.ad_trackers_owners}`;
+          }
+          // third-party cookies
+          let cookiePrefix = "[ ] ";
+          if (cardsSummary.cookies_number > 0) {
+            cookiePrefix = `[X] ${cardsSummary.cookies_number} `;
+          }
+          cardContent = `${cardContent}\n\n${cookiePrefix}${cookiesCard.title} - ${cardsSummary.cookies_statement}`;
+          if (cardsSummary.cookies_owners !== "") {
+            cardContent = `${cardContent}\nCookies detected set for: ${cardsSummary.cookies_owners}`;
+          }
+          // fingerprinting
+          if (cardsSummary.canvas_fingerprinting_found === "true") {
+            cardContent = `${cardContent}\n\n[X] Canvas fingerprinting was detected on this website.`;
+            if (cardsSummary.canvas_fingerprinting_owners !== "") {
+              cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.canvas_fingerprinting_owners}`;
+            }
+          } else {
+            cardContent = `${cardContent}\n\n[ ] Canvas fingerprinting was not detected on this website.`;
+          }
+          // session recording
+          if (cardsSummary.session_recording_found === "true") {
+            cardContent = `${cardContent}\n\n[X] Blacklight detected the use of a session recorder.`;
+            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.session_recording_owners}`;
+          } else {
+            cardContent = `${cardContent}\n\n[ ] Blacklight did not detect the use of a session recorder.`;
+          }
+          // key logging
+          if (cardsSummary.key_logging_found === "true") {
+            cardContent = `${cardContent}\n\n[X] ${keyLoggingCard.title}`;
+            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.key_logging_owners}`;
+          } else {
+            cardContent = `${cardContent}\n\n[ ] ${keyLoggingCard.title}`;
+          }
+          // meta pixel
+          if (cardsSummary.pixel_found === "true") {
+            cardContent = `${cardContent}\n\n[X] ${pixelCard.title}`;
+          } else {
+            cardContent = `${cardContent}\n\n[ ] ${pixelCard.title}`;
+          }
+          // google analytics remarketing
+          if (cardsSummary.google_remarketing_found === "true") {
+            cardContent = `${cardContent}\n\n[X] ${analyticsCard.title}`;
+          } else {
+            cardContent = `${cardContent}\n\n[ ] ${analyticsCard.title}`;
+          }
+          // ad tech companies this site interacted with
+          if (cardsSummary.ad_tech_companies !== "") {
+            cardContent = `${cardContent}\n\n${someAdTechCompanies.title}`;
+            cardContent = `${cardContent}\n${cardsSummary.ad_tech_companies}`;
+          }
+          console.log(`${cardContent}\n`);
+
         } catch (err: any) {
           console.log("error processing inspection!", err);
         }
@@ -251,16 +255,11 @@ const processDirectory = async (directory: string) => {
     }
   }
 
-  // write to csvs
-  const querySummaryPath: string = `./${timestamp()}-query-summary.csv`;
-  const queryCSV = new ObjectsToCsv(querySummaries);
-  await queryCSV.toDisk(querySummaryPath);
-  console.log(`> query summary written to ${querySummaryPath}`);
-
+  // write to csv
   const cardsSummaryPath: string = `./${timestamp()}-cards-summary.csv`;
   const cardsCSV = new ObjectsToCsv(cardsSummaries);
   await cardsCSV.toDisk(cardsSummaryPath);
   console.log(`> cards summary written to ${cardsSummaryPath}`);
 }
 
-processDirectory("./testing");
+processDirectory("./outputs");
