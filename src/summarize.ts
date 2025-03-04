@@ -3,17 +3,17 @@ import ObjectsToCsv from "objects-to-csv";
 import fs from "fs";
 import path from "path";
 import reportedCardsData from "../packages/blacklight-lambda/src-api-lambda/reported-cards";
-import { cardGroups } from '../packages/blacklight-lambda/src-cards-writer/index';
+import { cardGroups } from "../packages/blacklight-lambda/src-cards-writer/index";
 import { stripHtml } from "string-strip-html";
 
 interface CardsSummary {
   url: string;
   ad_trackers_number: number;
   ad_trackers_owners: string; // list of tracker companies
-  ad_trackers_statement: string; // e.g. 'this is more than the average of...'
+  ad_trackers_statement: string; // e.g. "this is more than the average of..."
   cookies_number: number;
   cookies_owners: string; // list of cookie companies
-  cookies_statement: string; // e.g. 'this is more than the average of...'
+  cookies_statement: string; // e.g. "this is more than the average of..."
   canvas_fingerprinting_found: string;
   canvas_fingerprinting_owners: string; // list of script owners
   session_recording_found: string;
@@ -151,16 +151,16 @@ const processDirectory = async (directory: string) => {
           const domainCache: any = trackerRadarDomainCache;
           const { groups } = await cardGroups(inspection, inspectionPath, domainCache, cardsData);
 
-          const inspectionResult: any = groups.find((item: any) => item.title === 'Blacklight Inspection Result');
-          const adTrackersCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'ddg_join_ads');
-          const cookiesCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'cookies');
-          const fingerprintingCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'canvas_fingerprinters');
-          const sessionRecordersCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'session_recorders');
-          const keyLoggingCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'key_logging');
-          const pixelCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'fb_pixel_events');
-          const analyticsCard: any = inspectionResult.cards.find((item: any) => item.cardType === 'ga');
+          const inspectionResult: any = groups.find((item: any) => item.title === "Blacklight Inspection Result");
+          const adTrackersCard: any = inspectionResult.cards.find((item: any) => item.cardType === "ddg_join_ads");
+          const cookiesCard: any = inspectionResult.cards.find((item: any) => item.cardType === "cookies");
+          const fingerprintingCard: any = inspectionResult.cards.find((item: any) => item.cardType === "canvas_fingerprinters");
+          const sessionRecordersCard: any = inspectionResult.cards.find((item: any) => item.cardType === "session_recorders");
+          const keyLoggingCard: any = inspectionResult.cards.find((item: any) => item.cardType === "key_logging");
+          const pixelCard: any = inspectionResult.cards.find((item: any) => item.cardType === "fb_pixel_events");
+          const analyticsCard: any = inspectionResult.cards.find((item: any) => item.cardType === "ga");
 
-          const someAdTechCompanies: any = groups.find((item) => item.title === 'Some of the ad-tech companies this website interacted with:');
+          const someAdTechCompanies: any = groups.find((item) => item.title === "Some of the ad-tech companies this website interacted with:");
 
           const cardsSummary: CardsSummary = {
             url: inspection.uri_ins,
