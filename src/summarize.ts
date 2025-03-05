@@ -83,20 +83,20 @@ const processDirectory = async (directory: string) => {
           const cardsSummary: CardsSummary = {
             url: inspection.uri_ins,
             ad_trackers_number: adTrackersCard?.bigNumber || 0,
-            ad_trackers_owners: adTrackersCard?.domainData?.owners?.join(", ") || "",
+            ad_trackers_owners: adTrackersCard?.domainData?.owners?.join("; ") || "",
             ad_trackers_statement: stripHtml(adTrackersCard?.onAvgStatement || "").result,
             cookies_number: cookiesCard?.bigNumber || 0,
-            cookies_owners: cookiesCard?.domainData?.owners?.join(", ") || "",
+            cookies_owners: cookiesCard?.domainData?.owners?.join("; ") || "",
             cookies_statement: stripHtml(cookiesCard?.onAvgStatement || "").result,
             canvas_fingerprinting_found: fingerprintingCard?.testEventsFound ? "true" : "false",
-            canvas_fingerprinting_owners: fingerprintingCard?.domainData?.owners?.join(", ") || "",
+            canvas_fingerprinting_owners: fingerprintingCard?.domainData?.owners?.join("; ") || "",
             session_recording_found: sessionRecordersCard?.testEventsFound ? "true" : "false",
-            session_recording_owners: sessionRecordersCard?.domainData?.owners?.join(", ") || "",
+            session_recording_owners: sessionRecordersCard?.domainData?.owners?.join("; ") || "",
             key_logging_found: keyLoggingCard?.testEventsFound ? "true" : "false",
-            key_logging_owners: keyLoggingCard?.domainData?.owners?.join(", ") || "",
+            key_logging_owners: keyLoggingCard?.domainData?.owners?.join("; ") || "",
             pixel_found: pixelCard?.testEventsFound ? "true" : "false",
             google_remarketing_found: analyticsCard?.testEventsFound ? "true" : "false",
-            ad_tech_companies: someAdTechCompanies?.cards?.map((item: any) => item.title)?.join(", ") || "",
+            ad_tech_companies: someAdTechCompanies?.cards?.map((item: any) => item.title)?.join("; ") || "",
           }
           cardsSummaries.push(cardsSummary);
 
