@@ -17,14 +17,14 @@ interface CardsSummary {
   cookies_number: number;
   cookies_owners: string; // list of cookie companies
   cookies_statement: string; // e.g. "this is more than the average of..."
-  canvas_fingerprinting_found: string;
+  canvas_fingerprinting_found: "true" | "false";
   canvas_fingerprinting_owners: string; // list of script owners
-  session_recording_found: string;
+  session_recording_found: "true" | "false";
   session_recording_owners: string; // list of script owners
-  key_logging_found: string;
+  key_logging_found: "true" | "false";
   key_logging_owners: string; // list of script owners
-  pixel_found: string;
-  google_remarketing_found: string;
+  pixel_found: "true" | "false";
+  google_remarketing_found: "true" | "false";
   ad_tech_companies_number: number;
   ad_tech_companies: string; // list of ad-tech companies interacted with
 }
