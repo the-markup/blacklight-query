@@ -60,6 +60,11 @@ const processDirectory = async (directory: string) => {
 
           const { groups } = await cardGroups(inspection, inspectionPath, domainCache, cardsData);
 
+          // write the analysis to a file in the target directory
+          // the file will be overwritten/replaced each time this script is run
+          const groupsPath: string = path.join(entryPath, `blacklight-inspection-result.json`)
+          fs.writeFileSync(groupsPath, JSON.stringify(groups, null, 2));
+
           const inspectionResult: any = groups.find((item: any) => item.title === "Blacklight Inspection Result");
           const adTrackersCard: any = inspectionResult.cards.find((item: any) => item.cardType === "ddg_join_ads");
           const cookiesCard: any = inspectionResult.cards.find((item: any) => item.cardType === "cookies");
