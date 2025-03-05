@@ -41,6 +41,9 @@ const timestamp = () => {
 
 // Read all JSON files and process each listing
 const processDirectory = async (directory: string) => {
+  // data from blacklight lambda
+  const cardsData: any[] = reportedCardsData;
+  const domainCache: any = trackerRadarDomainCache;
   const files = fs.readdirSync(directory);
   const cardsSummaries: CardsSummary[] = [];
 
@@ -55,8 +58,6 @@ const processDirectory = async (directory: string) => {
         try {
           const inspection = JSON.parse(fs.readFileSync(inspectionPath, "utf8"));
 
-          const cardsData: any[] = reportedCardsData;
-          const domainCache: any = trackerRadarDomainCache;
           const { groups } = await cardGroups(inspection, inspectionPath, domainCache, cardsData);
 
           const inspectionResult: any = groups.find((item: any) => item.title === "Blacklight Inspection Result");
