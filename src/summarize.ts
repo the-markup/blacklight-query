@@ -39,21 +39,25 @@ const timestamp = () => {
   return `${dateString}-${timeString}`;
 }
 
-// Read all JSON files and process each listing
+// iterate over directories and process contained `inspection.json` files
 const processDirectory = async (directory: string) => {
   // data from blacklight lambda
   const cardsData: any[] = reportedCardsData;
   const domainCache: any = trackerRadarDomainCache;
-  const files = fs.readdirSync(directory);
+  // the summaries we'll write to CSV
   const cardsSummaries: CardsSummary[] = [];
+  // the files we'll be navigating
+  const files = fs.readdirSync(directory);
 
+  // step through the files
   for (const entry of files) {
     const entryPath = path.join(directory, entry);
     const stats = fs.statSync(entryPath);
 
+    // if the file is a directory
     if (stats.isDirectory()) {
+      // check for an `inspection.json` file and process it if it exists
       const inspectionPath = path.join(entryPath, "inspection.json");
-
       if (fs.existsSync(inspectionPath)) {
         try {
           const inspection = JSON.parse(fs.readFileSync(inspectionPath, "utf8"));
