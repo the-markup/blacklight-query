@@ -7,7 +7,10 @@ import { cardGroups } from "../packages/blacklight-lambda/src-cards-writer/index
 import { stripHtml } from "string-strip-html";
 
 interface CardsSummary {
+  host: string;
+  pages_number: number;
   url: string;
+  additional_urls: string;
   ad_trackers_number: number;
   ad_trackers_owners: string; // list of tracker companies
   ad_trackers_statement: string; // e.g. "this is more than the average of..."
@@ -22,6 +25,7 @@ interface CardsSummary {
   key_logging_owners: string; // list of script owners
   pixel_found: string;
   google_remarketing_found: string;
+  ad_tech_companies_number: number;
   ad_tech_companies: string; // list of ad-tech companies interacted with
 }
 
@@ -81,7 +85,10 @@ const processDirectory = async (directory: string) => {
           const someAdTechCompanies: any = groups.find((item) => item.title === "Some of the ad-tech companies this website interacted with:");
 
           const cardsSummary: CardsSummary = {
+            host: inspection.host,
+            pages_number: inspection.config.numPages + 1,
             url: inspection.uri_ins,
+            additional_urls: inspection.browsing_history.slice(1).join("; "),
             ad_trackers_number: adTrackersCard?.bigNumber || 0,
             ad_trackers_owners: adTrackersCard?.domainData?.owners?.join("; ") || "",
             ad_trackers_statement: stripHtml(adTrackersCard?.onAvgStatement || "").result,
@@ -96,6 +103,7 @@ const processDirectory = async (directory: string) => {
             key_logging_owners: keyLoggingCard?.domainData?.owners?.join("; ") || "",
             pixel_found: pixelCard?.testEventsFound ? "true" : "false",
             google_remarketing_found: analyticsCard?.testEventsFound ? "true" : "false",
+            ad_tech_companies_number: someAdTechCompanies?.cards?.length || 0,
             ad_tech_companies: someAdTechCompanies?.cards?.map((item: any) => item.title)?.join("; ") || "",
           }
           cardsSummaries.push(cardsSummary);
@@ -103,7 +111,8 @@ const processDirectory = async (directory: string) => {
           // summarize findings to the console
           let cardContent = "-----------------------------------------------";
           // the URL of the site
-          cardContent = `${cardContent}\n${inspection.uri_ins}\n`;
+          cardContent = `${cardContent}\nScanned ${cardsSummary.host}, ${cardsSummary.pages_number} page(s):`;
+          cardContent = `${cardContent}\n${inspection.browsing_history.join("\n")}\n`;
           // ad trackers
           let adTrackersPrefix = "[ ] ";
           if (cardsSummary.ad_trackers_number > 0) {
