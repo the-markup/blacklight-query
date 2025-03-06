@@ -109,69 +109,84 @@ const processDirectory = async (directory: string) => {
           cardsSummaries.push(cardsSummary);
 
           // summarize findings to the console
-          let cardContent = "-----------------------------------------------";
+          const cardContentLines: string[] = [];
+          cardContentLines.push("-----------------------------------------------");
           // the URL of the site
-          cardContent = `${cardContent}\nScanned ${cardsSummary.host}, ${cardsSummary.pages_number} page(s):`;
-          cardContent = `${cardContent}\n${inspection.browsing_history.join("\n")}\n`;
+          cardContentLines.push(
+            `Scanned ${cardsSummary.host}, ${cardsSummary.pages_number} page(s):`
+          );
+          cardContentLines.push(`${inspection.browsing_history.join("\n")}\n`);
           // ad trackers
           let adTrackersPrefix = "[ ] ";
           if (cardsSummary.ad_trackers_number > 0) {
             adTrackersPrefix = `[X] ${cardsSummary.ad_trackers_number} `;
           }
-          cardContent = `${cardContent}\n${adTrackersPrefix}${adTrackersCard.title} - ${cardsSummary.ad_trackers_statement}`;
+          cardContentLines.push(
+            `${adTrackersPrefix}${adTrackersCard.title} - ${cardsSummary.ad_trackers_statement}`
+          );
           if (cardsSummary.ad_trackers_owners !== "") {
-            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.ad_trackers_owners}`;
+            cardContentLines.push(
+              `Scripts detected belonging to: ${cardsSummary.ad_trackers_owners}`
+            );
           }
           // third-party cookies
           let cookiePrefix = "[ ] ";
           if (cardsSummary.cookies_number > 0) {
             cookiePrefix = `[X] ${cardsSummary.cookies_number} `;
           }
-          cardContent = `${cardContent}\n\n${cookiePrefix}${cookiesCard.title} - ${cardsSummary.cookies_statement}`;
+          cardContentLines.push(
+            `\n${cookiePrefix}${cookiesCard.title} - ${cardsSummary.cookies_statement}`
+          );
           if (cardsSummary.cookies_owners !== "") {
-            cardContent = `${cardContent}\nCookies detected set for: ${cardsSummary.cookies_owners}`;
+            cardContentLines.push(`Cookies detected set for: ${cardsSummary.cookies_owners}`);
           }
           // fingerprinting
           if (cardsSummary.canvas_fingerprinting_found === "true") {
-            cardContent = `${cardContent}\n\n[X] Canvas fingerprinting was detected on this website.`;
+            cardContentLines.push(`\n[X] Canvas fingerprinting was detected on this website.`);
             if (cardsSummary.canvas_fingerprinting_owners !== "") {
-              cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.canvas_fingerprinting_owners}`;
+              cardContentLines.push(
+                `Scripts detected belonging to: ${cardsSummary.canvas_fingerprinting_owners}`
+              );
             }
           } else {
-            cardContent = `${cardContent}\n\n[ ] Canvas fingerprinting was not detected on this website.`;
+            cardContentLines.push(`\n[ ] Canvas fingerprinting was not detected on this website.`);
           }
           // session recording
           if (cardsSummary.session_recording_found === "true") {
-            cardContent = `${cardContent}\n\n[X] Blacklight detected the use of a session recorder.`;
-            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.session_recording_owners}`;
+            cardContentLines.push(`\n[X] Blacklight detected the use of a session recorder.`);
+            cardContentLines.push(
+              `Scripts detected belonging to: ${cardsSummary.session_recording_owners}`
+            );
           } else {
-            cardContent = `${cardContent}\n\n[ ] Blacklight did not detect the use of a session recorder.`;
+            cardContentLines.push(`\n[ ] Blacklight did not detect the use of a session recorder.`);
           }
           // key logging
           if (cardsSummary.key_logging_found === "true") {
-            cardContent = `${cardContent}\n\n[X] ${keyLoggingCard.title}`;
-            cardContent = `${cardContent}\nScripts detected belonging to: ${cardsSummary.key_logging_owners}`;
+            cardContentLines.push(`\n[X] ${keyLoggingCard.title}`);
+            cardContentLines.push(
+              `Scripts detected belonging to: ${cardsSummary.key_logging_owners}`
+            );
           } else {
-            cardContent = `${cardContent}\n\n[ ] ${keyLoggingCard.title}`;
+            cardContentLines.push(`\n[ ] ${keyLoggingCard.title}`);
           }
           // meta pixel
           if (cardsSummary.pixel_found === "true") {
-            cardContent = `${cardContent}\n\n[X] ${pixelCard.title}`;
+            cardContentLines.push(`\n[X] ${pixelCard.title}`);
           } else {
-            cardContent = `${cardContent}\n\n[ ] ${pixelCard.title}`;
+            cardContentLines.push(`\n[ ] ${pixelCard.title}`);
           }
           // google analytics remarketing
           if (cardsSummary.google_remarketing_found === "true") {
-            cardContent = `${cardContent}\n\n[X] ${analyticsCard.title}`;
+            cardContentLines.push(`\n[X] ${analyticsCard.title}`);
           } else {
-            cardContent = `${cardContent}\n\n[ ] ${analyticsCard.title}`;
+            cardContentLines.push(`\n[ ] ${analyticsCard.title}`);
           }
           // ad tech companies this site interacted with
           if (cardsSummary.ad_tech_companies !== "") {
-            cardContent = `${cardContent}\n\n${someAdTechCompanies.title}`;
-            cardContent = `${cardContent}\n${cardsSummary.ad_tech_companies}`;
+            cardContentLines.push(`\n${someAdTechCompanies.title}`);
+            cardContentLines.push(`${cardsSummary.ad_tech_companies}`);
           }
-          console.log(`${cardContent}\n`);
+          console.log(`${cardContentLines.join("\n")}\n`);
 
         } catch (err: any) {
           console.log("error processing inspection!", err);
