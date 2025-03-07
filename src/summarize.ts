@@ -6,6 +6,7 @@ import reportedCardsData from "../packages/blacklight-lambda/src-api-lambda/repo
 import { cardGroups } from "../packages/blacklight-lambda/src-cards-writer/index";
 import { stripHtml } from "string-strip-html";
 
+// the info that's saved about each scan for export to CSV
 interface CardsSummary {
   host: string;
   pages_number: number;
@@ -29,6 +30,23 @@ interface CardsSummary {
   ad_tech_companies: string; // list of ad-tech companies interacted with
 }
 
+// ReportedCard and DomainDetail describe data structures coming from blacklight-lambda
+interface ReportedCard {
+  title: string;
+  ddg_company_lookup: string;
+  bl_data_type: string;
+  body: string;
+  privacy_policy: string;
+  last_updated: string;
+  domains: string[];
+  links: Record<string, string>;
+}
+
+interface DomainDetail {
+  script_domain_owner: string;
+  script_domain_tracker_categories: string[];
+}
+
 // get the current date & time as an ISO string
 const nowISOString = () => {
   const now = new Date();
@@ -46,8 +64,8 @@ const timestamp = () => {
 // iterate over directories and process contained `inspection.json` files
 const processDirectory = async (directory: string) => {
   // data from blacklight lambda
-  const cardsData: any[] = reportedCardsData;
-  const domainCache: any = trackerRadarDomainCache;
+  const cardsData: ReportedCard[] = reportedCardsData;
+  const domainCache: Record<string, DomainDetail> = trackerRadarDomainCache;
   // the summaries we'll write to CSV
   const cardsSummaries: CardsSummary[] = [];
   // the files we'll be navigating
