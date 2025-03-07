@@ -47,6 +47,50 @@ interface DomainDetail {
   script_domain_tracker_categories: string[];
 }
 
+// these interfaces describe data coming from the Blacklight Inspection Result generated
+// by blacklight-lambda's cardGroups function
+interface DomainData {
+  scripts: string[];
+  categories: string[];
+  owners: string[];
+}
+
+interface InspectionResultCard {
+  bigNumber?: number;
+  body: string[];
+  cardType: string;
+  caveat?: string;
+  dataUrlForImage?: string[];
+  domainData?: DomainData | null;
+  expandableList?: string[][];
+  methodology: string;
+  onAvgStatement?: string;
+  surveyLink?: string;
+  testEventsFound: boolean;
+  title: string;
+}
+
+interface InspectionResult {
+  title: string;
+  cards: InspectionResultCard[];
+}
+
+interface AdTechCompanyCard {
+  bl_data_type: string;
+  body: string[];
+  cardType: string;
+  ddg_company_lookup: string;
+  domains_found: string[];
+  last_updated: string;
+  privacy_policy: string;
+  title: string;
+}
+
+interface AdTechCompanies {
+  title: string;
+  cards: AdTechCompanyCard[];
+}
+
 // get the current date & time as an ISO string
 const nowISOString = () => {
   const now = new Date();
@@ -91,16 +135,38 @@ const processDirectory = async (directory: string) => {
           const groupsPath: string = path.join(entryPath, `blacklight-inspection-result.json`)
           fs.writeFileSync(groupsPath, JSON.stringify(groups, null, 2));
 
-          const inspectionResult: any = groups.find((item: any) => item.title === "Blacklight Inspection Result");
-          const adTrackersCard: any = inspectionResult.cards.find((item: any) => item.cardType === "ddg_join_ads");
-          const cookiesCard: any = inspectionResult.cards.find((item: any) => item.cardType === "cookies");
-          const fingerprintingCard: any = inspectionResult.cards.find((item: any) => item.cardType === "canvas_fingerprinters");
-          const sessionRecordersCard: any = inspectionResult.cards.find((item: any) => item.cardType === "session_recorders");
-          const keyLoggingCard: any = inspectionResult.cards.find((item: any) => item.cardType === "key_logging");
-          const pixelCard: any = inspectionResult.cards.find((item: any) => item.cardType === "fb_pixel_events");
-          const analyticsCard: any = inspectionResult.cards.find((item: any) => item.cardType === "ga");
+          const inspectionResult: InspectionResult = groups.find(
+            (item: InspectionResult) => item.title === "Blacklight Inspection Result"
+          );
+          const adTrackersCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "ddg_join_ads"
+          );
+          const cookiesCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "cookies"
+          );
+          const fingerprintingCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "canvas_fingerprinters"
+          );
+          const sessionRecordersCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "session_recorders"
+          );
+          const keyLoggingCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "key_logging"
+          );
+          const pixelCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "fb_pixel_events"
+          );
+          const analyticsCard: InspectionResultCard = inspectionResult.cards.find(
+            (item: InspectionResultCard) => item.cardType === "ga"
+          );
 
-          const someAdTechCompanies: any = groups.find((item) => item.title === "Some of the ad-tech companies this website interacted with:");
+          const someAdTechCompanies: AdTechCompanies = groups.find(
+            (item: AdTechCompanies) => item.title.startsWith("Some of the ad-tech companies")
+          );
+
+          const adTechCompaniesSummary: string = someAdTechCompanies?.cards?.map(
+            (item: AdTechCompanyCard) => item.title
+          )?.join("; ") || "";
 
           const cardsSummary: CardsSummary = {
             host: inspection.host,
@@ -122,7 +188,7 @@ const processDirectory = async (directory: string) => {
             pixel_found: pixelCard?.testEventsFound ? "true" : "false",
             google_remarketing_found: analyticsCard?.testEventsFound ? "true" : "false",
             ad_tech_companies_number: someAdTechCompanies?.cards?.length || 0,
-            ad_tech_companies: someAdTechCompanies?.cards?.map((item: any) => item.title)?.join("; ") || "",
+            ad_tech_companies: adTechCompaniesSummary,
           }
           cardsSummaries.push(cardsSummary);
 
