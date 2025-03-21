@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/the-markup/blacklight-query#readme",
     "dependencies": {
-        "@themarkup/blacklight-collector": "^3.5.0",
+        "@themarkup/blacklight-collector": "^3.5.2",
         "ts-progress": "^0.1.9"
     },
     "devDependencies": {
