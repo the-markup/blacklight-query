@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/the-markup/blacklight-query#readme",
     "dependencies": {
-        "@themarkup/blacklight-collector": "^3.6.1",
+        "@themarkup/blacklight-collector": "^3.8.0",
         "ts-progress": "^0.1.9"
     },
     "devDependencies": {
@@ -44,11 +44,11 @@
             "stack.js"
         ],
         "preset": "ts-jest",
+        "transform": {
+            "^.*\/__tests__\/.*ts$": ["ts-jest", {"diagnostics": false}]
+        },
         "globals": {
-            "__DEV_SERVER__": "http://localhost:8125",
-            "ts-jest": {
-                "diagnostics": false
-            }
+            "__DEV_SERVER__": "http://localhost:8125"
         }
     },
     "publishConfig": {
