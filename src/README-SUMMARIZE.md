@@ -2,6 +2,20 @@
 
 This branch includes a new script in this directory that lets you get human-readable summaries from blacklight query output. It will not be opened as a PR as it's a hack—Tomas installed the (private) lambda repo as a submodule so he could access its methods and data—but it is useful to quickly analyze a big batch of results.
 
+## How to install
+
+To check out the private lambda repo as a submodule, run:
+
+```bash
+git submodule update --init --recursive
+```
+
+And make sure all the proper libraries are installed
+
+```bash
+npm install
+```
+
 ## How to summarize
 
 Follow the instructions in the main README to run a scan on a list of URLs. The results of the scan will be placed in the `outputs` folder.
